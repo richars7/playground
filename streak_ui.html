@@ -1,0 +1,2633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LeetCode Streak Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .streak-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .streak-item {
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 120px;
+        }
+
+        .streak-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .streak-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .category-btn {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .category-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .category-btn.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .difficulty-btn.easy {
+            border-color: #4caf50;
+        }
+
+        .difficulty-btn.easy:hover, .difficulty-btn.easy.selected {
+            background: #4caf50;
+            color: white;
+        }
+
+        .difficulty-btn.medium {
+            border-color: #ff9800;
+        }
+
+        .difficulty-btn.medium:hover, .difficulty-btn.medium.selected {
+            background: #ff9800;
+            color: white;
+        }
+
+        .difficulty-btn.hard {
+            border-color: #f44336;
+        }
+
+        .difficulty-btn.hard:hover, .difficulty-btn.hard.selected {
+            background: #f44336;
+            color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .progress-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e1e5e9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+
+        .achievements {
+            margin-top: 20px;
+        }
+
+        .achievement {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 5px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .recent-problems {
+            margin-top: 20px;
+        }
+
+        .problem-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        .problem-name {
+            font-weight: 600;
+        }
+
+        .problem-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .streak-emoji {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+        }
+
+        /* Problem Categories Section */
+        .categories-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .category-header:hover {
+            transform: translateY(-2px);
+        }
+
+        .category-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        .category-toggle {
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .category-toggle.expanded {
+            transform: rotate(180deg);
+        }
+
+        .problems-list {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .problems-list.show {
+            display: block;
+        }
+
+        .problem-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #e1e5e9;
+            transition: background-color 0.3s;
+        }
+
+        .problem-item:hover {
+            background-color: #f8f9ff;
+        }
+
+        .problem-item:last-child {
+            border-bottom: none;
+        }
+
+        .problem-info {
+            flex: 1;
+        }
+
+        .problem-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .problem-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .problem-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .difficulty-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .difficulty-easy {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .difficulty-medium {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .difficulty-hard {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .solve-btn {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .solve-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .solve-btn.solved {
+            background: #4caf50;
+            cursor: default;
+        }
+
+        .solve-btn.solved:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .code-btn {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .code-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .tick-mark {
+            color: #4caf50;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Calendar Sidebar */
+        .calendar-sidebar {
+            position: relative;
+            top: auto;
+            right: auto;
+            width: 100%;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 0;
+            z-index: auto;
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .current-month {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 15px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-day.other-month {
+            color: #ccc;
+        }
+
+        .calendar-day.today {
+            background: #ff6b6b;
+            color: white;
+            font-weight: bold;
+        }
+
+        .calendar-day.solved {
+            background: #4caf50;
+            color: white;
+            font-weight: bold;
+        }
+
+        .calendar-day:hover {
+            background: #f0f0f0;
+        }
+
+        .calendar-day.today:hover {
+            background: #ff5252;
+        }
+
+        .calendar-day.solved:hover {
+            background: #45a049;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 5px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #666;
+            padding: 5px 0;
+        }
+
+        .streak-info {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 8px;
+        }
+
+        .streak-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 5px;
+        }
+
+        .streak-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Tips & Tricks Section */
+        .resource-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff7ed;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 159, 67, 0.3);
+        }
+
+        .resource-section h3 {
+            margin-bottom: 10px;
+            font-size: 1.4em;
+            color: #c2410c;
+        }
+
+        .resource-section p {
+            color: #92400e;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .resource-metric {
+            font-size: 0.85em;
+            color: #b45309;
+            margin-bottom: 12px;
+        }
+
+        .resource-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #f97316, #facc15);
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(249, 115, 22, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .resource-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 24px rgba(249, 115, 22, 0.35);
+        }
+
+        .workspace {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .ml-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .ml-card {
+            background: white;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.14);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ml-card::after {
+            content: '';
+            position: absolute;
+            top: -140px;
+            right: -100px;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.25), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .ml-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+            color: #1f2937;
+        }
+
+        .ml-card p {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        .ml-card ul {
+            margin-top: 12px;
+            padding-left: 20px;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        .ml-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.12);
+            color: #4f46e5;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 14px;
+        }
+
+        .ml-chip:hover {
+            background: rgba(79, 70, 229, 0.18);
+        }
+
+        .draw-board {
+            margin-top: 16px;
+            background: #f8f9ff;
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.18);
+            padding: 16px;
+        }
+
+        .draw-board canvas {
+            width: 100%;
+            height: 280px;
+            border-radius: 12px;
+            background: white;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            cursor: crosshair;
+        }
+
+        .draw-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .draw-controls button {
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .draw-controls button:hover {
+            opacity: 0.9;
+        }
+
+        .draw-controls label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4f46e5;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .draw-controls input[type="color"] {
+            width: 28px;
+            height: 28px;
+            border: none;
+            padding: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .draw-controls input[type="range"] {
+            width: 130px;
+        }
+
+        .notes-label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: 600;
+            color: #4f46e5;
+            font-size: 0.9rem;
+        }
+
+        .idea-notes,
+        .notes-area {
+            width: 100%;
+            min-height: 120px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            resize: vertical;
+            background: white;
+        }
+
+        .idea-notes:focus,
+        .notes-area:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .calendar-column {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        @media (max-width: 992px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-column {
+                order: -1;
+            }
+        }
+
+        .tips-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .tips-section h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .tip-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .tip-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .tip-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .tip-content {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .pseudo-code-toggle {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .pseudo-code-toggle:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .pseudo-code-content {
+            display: none;
+            margin-top: 15px;
+            background: #f8f9ff;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        .pseudo-code-content.show {
+            display: block;
+        }
+
+        .pseudo-code-content pre {
+            margin: 0;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            color: #2d3748;
+            background: transparent;
+        }
+
+        .pseudo-code-content code {
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+        }
+
+        .code-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .code-modal.show {
+            display: flex;
+        }
+
+        .code-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+        }
+
+        .code-modal-window {
+            position: relative;
+            width: min(780px, calc(100% - 40px));
+            background: #0b1220;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.5);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .code-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(14, 165, 233, 0.08));
+        }
+
+        .code-modal-title {
+            font-size: 1.2rem;
+            color: #e2e8f0;
+            margin: 0;
+        }
+
+        .code-modal-meta {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .close-code-modal {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-code-modal:hover {
+            color: #e2e8f0;
+        }
+
+        .code-terminal {
+            padding: 0 24px 24px;
+        }
+
+        .terminal-bar {
+            display: flex;
+            gap: 8px;
+            padding: 16px 0 12px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(148, 163, 184, 0.4);
+        }
+
+        .terminal-dot.dot-red {
+            background: #f87171;
+        }
+
+        .terminal-dot.dot-amber {
+            background: #fbbf24;
+        }
+
+        .terminal-dot.dot-green {
+            background: #34d399;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 280px;
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.18);
+        }
+
+        .code-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .code-action {
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #2563eb, #4338ca);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .code-action.secondary {
+            background: rgba(148, 163, 184, 0.2);
+            color: #e2e8f0;
+        }
+
+        .code-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .calendar-sidebar,
+            .calendar-column {
+                position: relative;
+                top: auto;
+                right: auto;
+                width: 100%;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 LeetCode Streak Tracker 🚀</h1>
+            <div class="streak-display">
+                <div class="streak-item">
+                    <span class="streak-number streak-emoji" id="currentStreak">0</span>
+                    <span class="streak-label">Current Streak</span>
+                </div>
+                <div class="streak-item">
+                    <span class="streak-number" id="totalProblems">0</span>
+                    <span class="streak-label">Total Problems</span>
+                </div>
+                <div class="streak-item">
+                    <span class="streak-number" id="weeklyProgress">0/5</span>
+                    <span class="streak-label">This Week</span>
+                </div>
+            </div>
+            <button class="reset-btn" onclick="resetTracker()">🔄 Reset Tracker</button>
+        </div>
+
+        <div class="content">
+            <div class="workspace">
+                <div class="ml-column">
+                    <div class="ml-card">
+                        <h3>Think &amp; Sketch Lab</h3>
+                        <p>Brain dump architectures Excalidraw-style. Map data flows, loss curves, or interview whiteboard stories and save screenshots for later.</p>
+                        <div class="draw-board">
+                            <div class="draw-controls">
+                                <label>Pen
+                                    <input type="color" id="penColor" value="#4f46e5">
+                                </label>
+                                <label>Width
+                                    <input type="range" id="penWidth" min="1" max="16" value="4">
+                                </label>
+                                <button type="button" id="clearCanvasBtn">Clear Canvas</button>
+                            </div>
+                            <canvas id="ideaCanvas"></canvas>
+                        </div>
+                        <label class="notes-label" for="ideaNotes">Text scratchpad</label>
+                        <textarea class="idea-notes" id="ideaNotes" placeholder="Jot pseudo prompts, follow-ups, or reminders..."></textarea>
+                    </div>
+
+                    <div class="ml-card">
+                        <h3>Problem Space</h3>
+                        <p>Slide from ideation into reps. Mix streak problems with strategy reminders so you never blank on a pattern again.</p>
+                        <ul>
+                            <li><strong>How to think tips &amp; tricks:</strong> jump to the punchy tip cards below.</li>
+                            <li><strong>Pseudo code in Python:</strong> every card reveals runnable skeletons.</li>
+                        </ul>
+                        <a class="ml-chip" href="#tips">Tips &amp; Tricks →</a>
+                        <a class="ml-chip" href="#problem-categories">Problem Categories →</a>
+                    </div>
+
+                    <div class="ml-card">
+                        <h3>Notes Vault</h3>
+                        <p>Capture hard-won lessons, interview takeaways, or TODOs for next grind session. Everything stays stored locally to revisit anytime.</p>
+                        <textarea class="notes-area" id="learningNotes" placeholder="Write what you learned today..."></textarea>
+                    </div>
+                </div>
+
+                <aside class="calendar-column calendar-sidebar" aria-label="Streak calendar">
+                    <div class="calendar-header">
+                        <div class="calendar-title">📅 Coding Calendar</div>
+                        <div class="current-month" id="currentMonth"></div>
+                    </div>
+                    
+                    <div class="calendar-weekdays">
+                        <div class="weekday">S</div>
+                        <div class="weekday">M</div>
+                        <div class="weekday">T</div>
+                        <div class="weekday">W</div>
+                        <div class="weekday">T</div>
+                        <div class="weekday">F</div>
+                        <div class="weekday">S</div>
+                    </div>
+                    
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar days will be populated here -->
+                    </div>
+                    
+                    <div class="streak-info">
+                        <div class="streak-number" id="calendarStreak">0</div>
+                        <div class="streak-label">Day Streak</div>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="progress-section">
+                <h3>📈 Weekly Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="weeklyProgressBar" style="width: 0%"></div>
+                </div>
+                <p id="weeklyText">0 / 5 problems solved this week</p>
+
+                <div class="achievements" id="achievements">
+                    <!-- Achievements will be populated here -->
+                </div>
+            </div>
+
+            <div class="resource-section">
+                <h3>🧠 ML &amp; System Design Vault</h3>
+                <p>Keep your algorithm streak fueled with quick primers on conventional ML workflows and modern LLM architecture moves.</p>
+                <div class="resource-metric">Opened <span id="resourceCounter">0</span>x on this device</div>
+                <a id="resourceCta" class="resource-cta" href="ml_resources/index.html" target="_blank" rel="noopener">Explore Playbooks →</a>
+            </div>
+
+            <div class="tips-section" id="tips">
+                <h3>💡 Tips & Tricks</h3>
+                
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">🎯</span>
+                        <span class="tip-title">Two Pointers Technique</span>
+                    </div>
+                    <div class="tip-content">
+                        Two markers sprint inwards until they meet—perfect for sorted arrays, range finds, and max-area plays.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Two Sum (Sorted Array)
+def two_sum(nums, target):
+    left = 0
+    right = len(nums) - 1
+    
+    while left < right:
+        current_sum = nums[left] + nums[right]
+        if current_sum == target:
+            return [left, right]
+        elif current_sum < target:
+            left += 1  # Move left pointer right (higher numbers)
+        else:
+            right -= 1  # Move right pointer left (lower numbers)
+    return []</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">🗺️</span>
+                        <span class="tip-title">Hash Map Patterns</span>
+                    </div>
+                    <div class="tip-content">
+                        Drop values into a lightning-fast phone book—instant O(1) lookups for complements, counts, and caches.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Two Sum (Unsorted Array)
+def two_sum(nums, target):
+    num_map = {}  # Our "phone book" - key: number, value: index
+    
+    for i, num in enumerate(nums):
+        complement = target - num  # What number do we need?
+        if complement in num_map:  # Is it in our "phone book"?
+            return [num_map[complement], i]  # Found it!
+        num_map[num] = i  # Add current number to our "phone book"
+    return []</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">🪟</span>
+                        <span class="tip-title">Sliding Window</span>
+                    </div>
+                    <div class="tip-content">
+                        Flex one window: stretch to capture more signal, squeeze to drop the noise—substring MVP.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Longest Substring Without Repeating Characters
+def longest_substring(s):
+    char_set = set()  # Track characters in current window
+    left = 0
+    max_length = 0
+    
+    for right in range(len(s)):
+        # If we see a duplicate, shrink window from left
+        while s[right] in char_set:
+            char_set.remove(s[left])  # Remove leftmost character
+            left += 1  # Move left boundary
+        
+        char_set.add(s[right])  # Add current character
+        max_length = max(max_length, right - left + 1)  # Update max
+    
+    return max_length</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">🔗</span>
+                        <span class="tip-title">Linked Lists</span>
+                    </div>
+                    <div class="tip-content">
+                        Flip pointers as you stride forward; unleash fast-vs-slow races to sniff out cycles.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Reverse Linked List
+def reverse_list(head):
+    prev = None  # Where we came from
+    curr = head  # Current node we're looking at
+    
+    while curr:
+        next_node = curr.next  # Remember where we're going
+        curr.next = prev       # Flip the link backwards
+        prev = curr           # Move prev forward
+        curr = next_node      # Move curr forward
+    return prev  # prev is now the new head</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">📚</span>
+                        <span class="tip-title">Stacks & Queues</span>
+                    </div>
+                    <div class="tip-content">
+                        Stack: last-in, first-out for nested logic and undo chains. Queue: first-in, first-out for BFS beats.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Valid Parentheses
+def is_valid(s):
+    stack = []  # Our "stack of plates"
+    mapping = {")": "(", "}": "{", "]": "["}  # What matches what
+    
+    for char in s:
+        if char in mapping:  # It's a closing bracket
+            if not stack or stack.pop() != mapping[char]:
+                return False  # No matching opening bracket
+        else:  # It's an opening bracket
+            stack.append(char)  # Add to our "stack of plates"
+    
+    return len(stack) == 0  # All brackets matched</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">🌳</span>
+                        <span class="tip-title">Trees & Binary Search</span>
+                    </div>
+                    <div class="tip-content">
+                        Slice the search space in half each move; tour trees pre/in/post order to shape the story you need.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Binary Search
+def binary_search(nums, target):
+    left = 0
+    right = len(nums) - 1
+    
+    while left <= right:
+        mid = left + (right - left) // 2  # Avoid overflow
+        
+        if nums[mid] == target:
+            return mid  # Found it!
+        elif nums[mid] < target:
+            left = mid + 1  # Search right half
+        else:
+            right = mid - 1  # Search left half
+    
+    return -1  # Not found</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">🧠</span>
+                        <span class="tip-title">Dynamic Programming</span>
+                    </div>
+                    <div class="tip-content">
+                        Cache small wins and climb upward—turn brute-force chaos into memoized momentum.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Climbing Stairs (Fibonacci)
+def climb_stairs(n):
+    if n <= 2:
+        return n
+    
+    # Our "cheat sheet" - store solutions to smaller problems
+    dp = [0] * (n + 1)
+    dp[1] = 1  # 1 way to climb 1 stair
+    dp[2] = 2  # 2 ways to climb 2 stairs
+    
+    # Build up from smaller problems
+    for i in range(3, n + 1):
+        dp[i] = dp[i-1] + dp[i-2]  # Use previous solutions
+    
+    return dp[n]  # Solution to our big problem</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">↩️</span>
+                        <span class="tip-title">Backtracking</span>
+                    </div>
+                    <div class="tip-content">
+                        Pick, mark, recurse, undo—systematically sweep every path for combos, subsets, and permutations.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Generate Permutations
+def permute(nums):
+    result = []
+    
+    def backtrack(current):
+        # Base case: we have a complete permutation
+        if len(current) == len(nums):
+            result.append(current[:])  # Make a copy
+            return
+        
+        # Try each number that hasn't been used yet
+        for num in nums:
+            if num not in current:
+                current.append(num)    # Try this path
+                backtrack(current)     # Explore further
+                current.pop()          # Backtrack (undo choice)
+    
+    backtrack([])
+    return result</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">🌐</span>
+                        <span class="tip-title">Graphs</span>
+                    </div>
+                    <div class="tip-content">
+                        BFS ripples layer by layer while DFS dives deep then rewinds—map networks, sniff cycles, trace routes.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: BFS (Breadth-First Search)
+def bfs(graph, start):
+    queue = [start]        # People to visit (like a line)
+    visited = {start}      # People we've already seen
+    result = []            # Order we visited them
+    
+    while queue:
+        node = queue.pop(0)  # Take first person from line
+        result.append(node)  # Visit them
+        
+        # Check all their friends
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)      # Mark as seen
+                queue.append(neighbor)     # Add to line to visit later
+    
+    return result</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">💰</span>
+                        <span class="tip-title">Greedy Algorithms</span>
+                    </div>
+                    <div class="tip-content">
+                        Lock in the best local move when proofs say it wins globally—interval picks, coin change, Huffman trees.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Activity Selection (Scheduling)
+def activity_selection(activities):
+    # Sort by end time (greedy choice: pick earliest ending)
+    activities.sort(key=lambda x: x[1])
+    
+    selected = [activities[0]]  # Always pick first activity
+    last_end = activities[0][1]  # When it ends
+    
+    for start, end in activities[1:]:
+        if start >= last_end:  # No conflict with last activity
+            selected.append((start, end))
+            last_end = end  # Update when we finish
+    
+    return selected</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">⚡</span>
+                        <span class="tip-title">Bit Manipulation</span>
+                    </div>
+                    <div class="tip-content">
+                        Flip binary switches: XOR cancels pairs, masks isolate states, shifts turbocharge math in O(1).
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Single Number (XOR magic!)
+def single_number(nums):
+    result = 0
+    
+    for num in nums:
+        result ^= num  # XOR each number
+    
+    return result
+
+# XOR properties (like toggle switches):
+# a ^ a = 0    (flip twice = back to original)
+# a ^ 0 = a    (flip once = opposite)
+# So duplicates cancel out, only unique number remains!</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">➕</span>
+                        <span class="tip-title">Math</span>
+                    </div>
+                    <div class="tip-content">
+                        Spot number patterns, compress repeated work, and wield math identities to vaporize loops.
+                    </div>
+                    <button class="pseudo-code-toggle" onclick="togglePseudoCode(this)">Show Python Code</button>
+                    <div class="pseudo-code-content">
+                        <pre><code># Example: Fast Exponentiation (Power of 2 trick)
+def pow(x, n):
+    if n == 0:
+        return 1
+    if n < 0:
+        x = 1 / x
+        n = -n
+    
+    result = 1
+    while n > 0:
+        if n % 2 == 1:  # If n is odd
+            result *= x  # Multiply by current x
+        x *= x          # Square x (x^2, x^4, x^8, ...)
+        n //= 2         # Divide n by 2
+    
+    return result
+
+# Example: 2^10 = (2^2)^5 = 4^5 = 4 × (4^2)^2 = 4 × 16^2 = 4 × 256 = 1024</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categories-section" id="problem-categories">
+                <h3>📚 Problem Categories</h3>
+                <p>Click on any category to see problems and mark them as solved!</p>
+                
+                <div class="category-header" onclick="toggleCategory('arrays')">
+                    <h3>01. Arrays & Strings</h3>
+                    <span class="category-toggle" id="arrays-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="arrays-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_two_sum.py</div>
+                            <div class="problem-meta">LeetCode #1 • Hash Map • Most frequently asked</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Two Sum', 'Arrays & Strings', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">002_valid_anagram.py</div>
+                            <div class="problem-meta">LeetCode #242 • Character Frequency Counting</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Valid Anagram', 'Arrays & Strings', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">003_contains_duplicate.py</div>
+                            <div class="problem-meta">LeetCode #217 • Hash Set</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Contains Duplicate', 'Arrays & Strings', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">004_valid_parentheses.py</div>
+                            <div class="problem-meta">LeetCode #20 • Stack for Matching</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Valid Parentheses', 'Arrays & Strings', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">005_maximum_subarray.py</div>
+                            <div class="problem-meta">LeetCode #53 • Kadane's Algorithm</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Maximum Subarray', 'Arrays & Strings', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">006_longest_substring_without_repeating.py</div>
+                            <div class="problem-meta">LeetCode #3 • Sliding Window + Hash Set</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Longest Substring Without Repeating Characters', 'Arrays & Strings', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">007_container_with_most_water.py</div>
+                            <div class="problem-meta">LeetCode #11 • Two Pointers</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Container With Most Water', 'Arrays & Strings', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">008_3sum.py</div>
+                            <div class="problem-meta">LeetCode #15 • Two Pointers + Sorting</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('3Sum', 'Arrays & Strings', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">009_product_of_array_except_self.py</div>
+                            <div class="problem-meta">LeetCode #238 • Prefix/Suffix Arrays</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Product of Array Except Self', 'Arrays & Strings', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">010_group_anagrams.py</div>
+                            <div class="problem-meta">LeetCode #49 • Hash Map + Sorting</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Group Anagrams', 'Arrays & Strings', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('linkedlists')">
+                    <h3>02. Linked Lists</h3>
+                    <span class="category-toggle" id="linkedlists-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="linkedlists-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_reverse_linked_list.py</div>
+                            <div class="problem-meta">LeetCode #206 • Three Pointers (prev, curr, next)</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Reverse Linked List', 'Linked Lists', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">002_linked_list_cycle.py</div>
+                            <div class="problem-meta">LeetCode #141 • Floyd's Cycle Detection</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Linked List Cycle', 'Linked Lists', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">003_merge_two_sorted_lists.py</div>
+                            <div class="problem-meta">LeetCode #21 • Two Pointers + Dummy Node</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Merge Two Sorted Lists', 'Linked Lists', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">004_palindrome_linked_list.py</div>
+                            <div class="problem-meta">LeetCode #234 • Reverse Half + Two Pointers</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Palindrome Linked List', 'Linked Lists', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">005_remove_duplicates_from_sorted_list.py</div>
+                            <div class="problem-meta">LeetCode #83 • Single Pointer Traversal</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Remove Duplicates from Sorted List', 'Linked Lists', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">006_add_two_numbers.py</div>
+                            <div class="problem-meta">LeetCode #2 • Digit-by-Digit Addition + Carry</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Add Two Numbers', 'Linked Lists', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">007_remove_nth_node_from_end.py</div>
+                            <div class="problem-meta">LeetCode #19 • Two Pointers with Gap</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Remove Nth Node From End', 'Linked Lists', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('stacks')">
+                    <h3>03. Stacks & Queues</h3>
+                    <span class="category-toggle" id="stacks-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="stacks-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_valid_parentheses.py</div>
+                            <div class="problem-meta">LeetCode #20 • Stack for Matching</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Valid Parentheses', 'Stacks & Queues', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('trees')">
+                    <h3>04. Trees & Binary Search</h3>
+                    <span class="category-toggle" id="trees-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="trees-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_maximum_depth_of_binary_tree.py</div>
+                            <div class="problem-meta">LeetCode #104 • Recursive DFS</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Maximum Depth of Binary Tree', 'Trees & Binary Search', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">002_binary_tree_level_order_traversal.py</div>
+                            <div class="problem-meta">LeetCode #102 • BFS with Queue</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Binary Tree Level Order Traversal', 'Trees & Binary Search', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">003_search_in_rotated_sorted_array.py</div>
+                            <div class="problem-meta">LeetCode #33 • Modified Binary Search</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Search in Rotated Sorted Array', 'Trees & Binary Search', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('dp')">
+                    <h3>05. Dynamic Programming</h3>
+                    <span class="category-toggle" id="dp-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="dp-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_climbing_stairs.py</div>
+                            <div class="problem-meta">LeetCode #70 • Fibonacci Sequence</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Climbing Stairs', 'Dynamic Programming', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">002_coin_change.py</div>
+                            <div class="problem-meta">LeetCode #322 • Unbounded Knapsack</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Coin Change', 'Dynamic Programming', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">003_longest_increasing_subsequence.py</div>
+                            <div class="problem-meta">LeetCode #300 • DP with Binary Search</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Longest Increasing Subsequence', 'Dynamic Programming', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('backtracking')">
+                    <h3>06. Backtracking</h3>
+                    <span class="category-toggle" id="backtracking-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="backtracking-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_subsets.py</div>
+                            <div class="problem-meta">LeetCode #78 • Decision Tree (Include/Exclude)</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Subsets', 'Backtracking', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">002_permutations.py</div>
+                            <div class="problem-meta">LeetCode #46 • Backtracking with Visited Array</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Permutations', 'Backtracking', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">003_combination_sum.py</div>
+                            <div class="problem-meta">LeetCode #39 • Backtracking with Repetition</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Combination Sum', 'Backtracking', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('graphs')">
+                    <h3>07. Graphs</h3>
+                    <span class="category-toggle" id="graphs-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="graphs-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_number_of_islands.py</div>
+                            <div class="problem-meta">LeetCode #200 • DFS/BFS on Grid</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Number of Islands', 'Graphs', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('greedy')">
+                    <h3>09. Greedy</h3>
+                    <span class="category-toggle" id="greedy-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="greedy-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_gas_station.py</div>
+                            <div class="problem-meta">LeetCode #134 • Greedy Algorithm</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Gas Station', 'Greedy', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('bitmanipulation')">
+                    <h3>10. Bit Manipulation</h3>
+                    <span class="category-toggle" id="bitmanipulation-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="bitmanipulation-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_single_number.py</div>
+                            <div class="problem-meta">LeetCode #136 • XOR Operation</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Single Number', 'Bit Manipulation', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">002_number_of_1_bits.py</div>
+                            <div class="problem-meta">LeetCode #191 • Bit Counting</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Number of 1 Bits', 'Bit Manipulation', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-header" onclick="toggleCategory('math')">
+                    <h3>11. Math</h3>
+                    <span class="category-toggle" id="math-toggle">▼</span>
+                </div>
+                <div class="problems-list" id="math-problems">
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">001_pow_x_n.py</div>
+                            <div class="problem-meta">LeetCode #50 • Fast Exponentiation</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Pow(x, n)', 'Math', 'Medium')">Solve</button>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-info">
+                            <div class="problem-name">002_sqrt_x.py</div>
+                            <div class="problem-meta">LeetCode #69 • Binary Search</div>
+                        </div>
+                        <div class="problem-actions">
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                            <button class="solve-btn" onclick="markProblemSolved('Sqrt(x)', 'Math', 'Easy')">Solve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        🎉 Problem marked as solved!
+    </div>
+
+    <div class="code-modal" id="codeModal" aria-hidden="true">
+        <div class="code-modal-overlay" id="codeModalOverlay"></div>
+        <div class="code-modal-window" role="dialog" aria-modal="true">
+            <div class="code-modal-header">
+                <div>
+                    <div class="code-modal-title" id="codeModalTitle">Practice Problem</div>
+                    <div class="code-modal-meta" id="codeModalMeta"></div>
+                </div>
+                <button class="close-code-modal" id="closeCodeModal" aria-label="Close code editor">×</button>
+            </div>
+            <div class="code-terminal">
+                <div class="terminal-bar">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-amber"></span>
+                    <span class="terminal-dot dot-green"></span>
+                </div>
+                <textarea id="codeEditor" class="code-editor" spellcheck="false" placeholder="# Write your solution sketch here"></textarea>
+                <div class="code-modal-footer">
+                    <button class="code-action secondary" id="clearCodeBtn" type="button">Clear</button>
+                    <button class="code-action" id="copyCodeBtn" type="button">Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data
+        let streakData = {
+            current_streak: 0,
+            longest_streak: 0,
+            total_problems_solved: 0,
+            last_activity_date: null,
+            weekly_goal: 5,
+            current_week_problems: 0,
+            week_start_date: null,
+            achievements: [],
+            problem_history: [],
+            solved_today: [],
+            categories_progress: {
+                "Arrays & Strings": 0,
+                "Linked Lists": 0,
+                "Stacks & Queues": 0,
+                "Trees & Binary Search": 0,
+                "Dynamic Programming": 0,
+                "Backtracking": 0,
+                "Graphs": 0,
+                "Greedy": 0,
+                "Bit Manipulation": 0,
+                "Math": 0
+            }
+        };
+
+        let currentCodeProblemKey = null;
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('leetcodeStreakData');
+            if (saved) {
+                streakData = JSON.parse(saved);
+            }
+            updateDisplay();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('leetcodeStreakData', JSON.stringify(streakData));
+        }
+
+        // Update streak based on last activity
+        function updateStreak() {
+            const today = new Date().toISOString().split('T')[0];
+            const lastActivity = streakData.last_activity_date;
+
+            if (!lastActivity) {
+                streakData.current_streak = 1;
+            } else if (lastActivity === today) {
+                // Already solved today, no change
+            } else {
+                const lastDate = new Date(lastActivity);
+                const todayDate = new Date(today);
+                const diffTime = todayDate - lastDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 1) {
+                    streakData.current_streak += 1;
+                } else {
+                    streakData.current_streak = 1;
+                }
+            }
+
+            if (streakData.current_streak > streakData.longest_streak) {
+                streakData.longest_streak = streakData.current_streak;
+            }
+
+            streakData.last_activity_date = today;
+        }
+
+        // Update weekly progress
+        function updateWeeklyProgress() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (streakData.week_start_date) {
+                const weekStart = new Date(streakData.week_start_date);
+                const todayDate = new Date(today);
+                const diffTime = todayDate - weekStart;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays >= 7) {
+                    streakData.current_week_problems = 0;
+                    streakData.week_start_date = today;
+                }
+            } else {
+                streakData.week_start_date = today;
+            }
+        }
+
+        // Check achievements
+        function checkAchievements() {
+            const newAchievements = [];
+            
+            // Streak achievements
+            if (streakData.current_streak === 3 && !streakData.achievements.includes('3_day_streak')) {
+                newAchievements.push('🔥 3-Day Streak Master');
+                streakData.achievements.push('3_day_streak');
+            }
+            
+            if (streakData.current_streak === 7 && !streakData.achievements.includes('7_day_streak')) {
+                newAchievements.push('🏆 Weekly Warrior');
+                streakData.achievements.push('7_day_streak');
+            }
+            
+            if (streakData.current_streak === 30 && !streakData.achievements.includes('30_day_streak')) {
+                newAchievements.push('👑 Monthly Master');
+                streakData.achievements.push('30_day_streak');
+            }
+            
+            // Problem count achievements
+            if (streakData.total_problems_solved === 10 && !streakData.achievements.includes('10_problems')) {
+                newAchievements.push('🎯 Problem Solver');
+                streakData.achievements.push('10_problems');
+            }
+            
+            if (streakData.total_problems_solved === 50 && !streakData.achievements.includes('50_problems')) {
+                newAchievements.push('💎 Coding Champion');
+                streakData.achievements.push('50_problems');
+            }
+            
+            if (streakData.total_problems_solved === 100 && !streakData.achievements.includes('100_problems')) {
+                newAchievements.push('🌟 LeetCode Legend');
+                streakData.achievements.push('100_problems');
+            }
+            
+            return newAchievements;
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('currentStreak').textContent = streakData.current_streak;
+            document.getElementById('totalProblems').textContent = streakData.total_problems_solved;
+            document.getElementById('weeklyProgress').textContent = `${streakData.current_week_problems}/${streakData.weekly_goal}`;
+            
+            // Update progress bar
+            const progress = (streakData.current_week_problems / streakData.weekly_goal) * 100;
+            document.getElementById('weeklyProgressBar').style.width = `${Math.min(progress, 100)}%`;
+            document.getElementById('weeklyText').textContent = `${streakData.current_week_problems} / ${streakData.weekly_goal} problems solved this week`;
+            
+            // Update achievements
+            const achievementsDiv = document.getElementById('achievements');
+            achievementsDiv.innerHTML = '';
+            streakData.achievements.forEach(achievement => {
+                const span = document.createElement('span');
+                span.className = 'achievement';
+                span.textContent = achievement;
+                achievementsDiv.appendChild(span);
+            });
+            
+            
+            // Update calendar
+            updateCalendar();
+
+            initCodeButtons();
+        }
+
+        // Update calendar
+        function updateCalendar() {
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            // Update month display
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            // Update streak display
+            document.getElementById('calendarStreak').textContent = streakData.current_streak;
+            
+            // Generate calendar
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+            
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            
+            // Add empty cells for days before the first day of the month
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day other-month';
+                emptyDay.textContent = '';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                const currentDate = new Date(currentYear, currentMonth, day);
+                const dateString = currentDate.toISOString().split('T')[0];
+                
+                // Check if this is today
+                if (currentDate.toDateString() === today.toDateString()) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Check if problems were solved on this day
+                const solvedOnThisDay = streakData.problem_history.some(problem => {
+                    const problemDate = new Date(problem.date).toISOString().split('T')[0];
+                    return problemDate === dateString;
+                });
+                
+                if (solvedOnThisDay) {
+                    dayElement.classList.add('solved');
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Category selection
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+
+        // Difficulty selection
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+
+        // Toggle category visibility
+        function toggleCategory(categoryId) {
+            const problemsList = document.getElementById(`${categoryId}-problems`);
+            const toggle = document.getElementById(`${categoryId}-toggle`);
+            
+            if (problemsList.classList.contains('show')) {
+                problemsList.classList.remove('show');
+                toggle.classList.remove('expanded');
+            } else {
+                problemsList.classList.add('show');
+                toggle.classList.add('expanded');
+            }
+        }
+
+        // Mark problem as solved from category list
+        function markProblemSolved(problemName, category, difficulty) {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Check if already solved today
+            const alreadySolved = streakData.solved_today.some(p => p.name === problemName && p.date === today);
+            if (alreadySolved) {
+                showNotification('✅ Already solved today!');
+                return;
+            }
+            
+            // Update streak and weekly progress
+            updateStreak();
+            updateWeeklyProgress();
+            
+            // Update counters
+            streakData.total_problems_solved += 1;
+            streakData.current_week_problems += 1;
+            
+            // Update category progress
+            streakData.categories_progress[category] += 1;
+            
+            // Add to history
+            const problemRecord = {
+                name: problemName,
+                category: category,
+                difficulty: difficulty,
+                date: new Date().toISOString()
+            };
+            streakData.problem_history.push(problemRecord);
+            
+            // Add to solved today
+            streakData.solved_today.push({
+                name: problemName,
+                category: category,
+                difficulty: difficulty,
+                date: today
+            });
+            
+            // Check achievements
+            const newAchievements = checkAchievements();
+            
+            // Save and update display
+            saveData();
+            updateDisplay();
+            
+            // Update the button to show solved state
+            const buttons = document.querySelectorAll('.solve-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent === 'Solve' && btn.onclick.toString().includes(problemName)) {
+                    btn.textContent = '✓ Solved';
+                    btn.classList.add('solved');
+                    btn.onclick = null;
+                }
+            });
+            
+            // Show notification
+            let message = `🎉 "${problemName}" marked as solved!`;
+            if (newAchievements.length > 0) {
+                message += `\n🏆 Achievement: ${newAchievements[0]}`;
+            }
+            showNotification(message);
+        }
+
+
+        // Reset tracker function
+        function resetTracker() {
+            if (confirm('Are you sure you want to reset your entire streak tracker? This will delete all your progress!')) {
+                // Reset all data
+                streakData = {
+                    current_streak: 0,
+                    longest_streak: 0,
+                    total_problems_solved: 0,
+                    last_activity_date: null,
+                    weekly_goal: 5,
+                    current_week_problems: 0,
+                    week_start_date: null,
+                    achievements: [],
+                    problem_history: [],
+                    solved_today: [],
+                    categories_progress: {
+                        "Arrays & Strings": 0,
+                        "Linked Lists": 0,
+                        "Stacks & Queues": 0,
+                        "Trees & Binary Search": 0,
+                        "Dynamic Programming": 0,
+                        "Backtracking": 0,
+                        "Graphs": 0,
+                        "Greedy": 0,
+                        "Bit Manipulation": 0,
+                        "Math": 0
+                    }
+                };
+                
+                // Clear localStorage
+                localStorage.removeItem('leetcodeStreakData');
+                
+                // Reset all solve buttons
+                document.querySelectorAll('.solve-btn').forEach(btn => {
+                    btn.textContent = 'Solve';
+                    btn.classList.remove('solved');
+                    btn.onclick = function() {
+                        const problemName = btn.onclick.toString().match(/markProblemSolved\('([^']+)'/)?.[1];
+                        const category = btn.onclick.toString().match(/markProblemSolved\('[^']+', '([^']+)'/)?.[1];
+                        const difficulty = btn.onclick.toString().match(/markProblemSolved\('[^']+', '[^']+', '([^']+)'/)?.[1];
+                        if (problemName && category && difficulty) {
+                            markProblemSolved(problemName, category, difficulty);
+                        }
+                    };
+                });
+                
+                // Update display
+                updateDisplay();
+                
+                // Show notification
+                showNotification('🔄 Tracker reset successfully! Fresh start!');
+            }
+        }
+
+        // Toggle pseudo-code visibility
+        function togglePseudoCode(button) {
+            const content = button.nextElementSibling;
+            content.classList.toggle('show');
+            if (content.classList.contains('show')) {
+                button.textContent = 'Hide Pseudo-code';
+            } else {
+                button.textContent = 'Show Pseudo-code';
+            }
+        }
+
+        function openCodePad(problemTitle, problemKey, meta) {
+            const modal = document.getElementById('codeModal');
+            const titleEl = document.getElementById('codeModalTitle');
+            const metaEl = document.getElementById('codeModalMeta');
+            const editor = document.getElementById('codeEditor');
+            if (!modal || !titleEl || !editor) {
+                return;
+            }
+
+            currentCodeProblemKey = problemKey || problemTitle || 'Practice Problem';
+            titleEl.textContent = problemTitle || problemKey || 'Practice Problem';
+            if (metaEl) {
+                metaEl.textContent = meta || '';
+            }
+
+            const stored = localStorage.getItem(`codePad:${currentCodeProblemKey}`);
+            editor.value = stored || `# ${problemTitle || problemKey}\n`;
+
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+
+            setTimeout(() => {
+                editor.focus();
+                editor.setSelectionRange(editor.value.length, editor.value.length);
+            }, 60);
+        }
+
+        function closeCodePad() {
+            const modal = document.getElementById('codeModal');
+            if (modal) {
+                modal.classList.remove('show');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+            currentCodeProblemKey = null;
+        }
+
+        function initCodeButtons() {
+            document.querySelectorAll('.problem-item').forEach(item => {
+                const actions = item.querySelector('.problem-actions');
+                if (!actions || actions.querySelector('.code-btn')) {
+                    return;
+                }
+
+                const solveBtn = actions.querySelector('.solve-btn');
+                const problemNameEl = item.querySelector('.problem-name');
+                const problemMetaEl = item.querySelector('.problem-meta');
+
+                let problemKey = problemNameEl ? problemNameEl.textContent.trim() : 'Practice Problem';
+                let displayName = problemKey;
+
+                if (solveBtn) {
+                    const onclick = solveBtn.getAttribute('onclick');
+                    const match = onclick && onclick.match(/markProblemSolved\('([^']+)'/);
+                    if (match && match[1]) {
+                        displayName = match[1];
+                    }
+                }
+
+                const meta = problemMetaEl ? problemMetaEl.textContent.trim() : '';
+
+                const codeBtn = document.createElement('button');
+                codeBtn.type = 'button';
+                codeBtn.className = 'code-btn';
+                codeBtn.textContent = 'Code';
+                codeBtn.addEventListener('click', () => openCodePad(displayName, problemKey, meta));
+
+                actions.appendChild(codeBtn);
+            });
+        }
+
+        function initCodePad() {
+            const modal = document.getElementById('codeModal');
+            if (!modal) {
+                return;
+            }
+
+            const overlay = document.getElementById('codeModalOverlay');
+            const closeBtn = document.getElementById('closeCodeModal');
+            const copyBtn = document.getElementById('copyCodeBtn');
+            const clearBtn = document.getElementById('clearCodeBtn');
+            const editor = document.getElementById('codeEditor');
+
+            const persist = () => {
+                if (!currentCodeProblemKey) {
+                    return;
+                }
+                localStorage.setItem(`codePad:${currentCodeProblemKey}`, editor.value);
+            };
+
+            editor.addEventListener('input', persist);
+
+            copyBtn?.addEventListener('click', () => {
+                if (!navigator.clipboard) {
+                    copyBtn.textContent = 'Not supported';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 1500);
+                    return;
+                }
+
+                navigator.clipboard.writeText(editor.value).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 1500);
+                }).catch(() => {
+                    copyBtn.textContent = 'Copy failed';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 1500);
+                });
+            });
+
+            clearBtn?.addEventListener('click', () => {
+                editor.value = '';
+                persist();
+                editor.focus();
+            });
+
+            overlay?.addEventListener('click', closeCodePad);
+            closeBtn?.addEventListener('click', closeCodePad);
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape' && modal.classList.contains('show')) {
+                    closeCodePad();
+                }
+            });
+        }
+
+        function initIdeaNotes() {
+            const notes = document.getElementById('ideaNotes');
+            if (!notes) {
+                return;
+            }
+
+            const stored = localStorage.getItem('ideaNotes');
+            if (stored) {
+                notes.value = stored;
+            }
+
+            notes.addEventListener('input', () => {
+                localStorage.setItem('ideaNotes', notes.value);
+            });
+        }
+
+        function initLearningNotes() {
+            const notes = document.getElementById('learningNotes');
+            if (!notes) {
+                return;
+            }
+
+            const stored = localStorage.getItem('learningNotes');
+            if (stored) {
+                notes.value = stored;
+            }
+
+            notes.addEventListener('input', () => {
+                localStorage.setItem('learningNotes', notes.value);
+            });
+        }
+
+        function updateResourceCounterDisplay() {
+            const counterEl = document.getElementById('resourceCounter');
+            if (!counterEl) {
+                return;
+            }
+            const count = parseInt(localStorage.getItem('resourceCtaClicks') || '0', 10);
+            counterEl.textContent = count;
+        }
+
+        function trackResourceClick() {
+            let count = parseInt(localStorage.getItem('resourceCtaClicks') || '0', 10);
+            count += 1;
+            localStorage.setItem('resourceCtaClicks', count);
+            updateResourceCounterDisplay();
+        }
+
+        function initResourceAnalytics() {
+            const cta = document.getElementById('resourceCta');
+            if (cta) {
+                cta.addEventListener('click', trackResourceClick);
+                cta.addEventListener('auxclick', event => {
+                    // Middle-clicks or ctrl-clicks should also register
+                    if (event.button !== 0) {
+                        trackResourceClick();
+                    }
+                });
+            }
+            updateResourceCounterDisplay();
+        }
+
+        function initIdeaCanvas() {
+            const canvas = document.getElementById('ideaCanvas');
+            if (!canvas) {
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            const colorInput = document.getElementById('penColor');
+            const widthInput = document.getElementById('penWidth');
+            const clearBtn = document.getElementById('clearCanvasBtn');
+
+            let drawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            function setCanvasSize() {
+                const rect = canvas.getBoundingClientRect();
+                const ratio = window.devicePixelRatio || 1;
+                canvas.width = rect.width * ratio;
+                canvas.height = rect.height * ratio;
+                if (typeof ctx.setTransform === 'function') {
+                    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+                } else if (typeof ctx.resetTransform === 'function') {
+                    ctx.resetTransform();
+                    ctx.scale(ratio, ratio);
+                } else {
+                    ctx.transform(ratio, 0, 0, ratio, 0, 0);
+                }
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+
+            function getPosition(event) {
+                const rect = canvas.getBoundingClientRect();
+                if (event.touches && event.touches.length > 0) {
+                    return {
+                        x: event.touches[0].clientX - rect.left,
+                        y: event.touches[0].clientY - rect.top
+                    };
+                }
+                return {
+                    x: event.offsetX,
+                    y: event.offsetY
+                };
+            }
+
+            function startDraw(event) {
+                drawing = true;
+                const pos = getPosition(event);
+                lastX = pos.x;
+                lastY = pos.y;
+            }
+
+            function draw(event) {
+                if (!drawing) {
+                    return;
+                }
+                event.preventDefault();
+                const pos = getPosition(event);
+                ctx.strokeStyle = colorInput.value;
+                ctx.lineWidth = parseInt(widthInput.value, 10) || 4;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                lastX = pos.x;
+                lastY = pos.y;
+            }
+
+            function endDraw() {
+                drawing = false;
+            }
+
+            function clearCanvas() {
+                ctx.save();
+                if (typeof ctx.setTransform === 'function') {
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                } else if (typeof ctx.resetTransform === 'function') {
+                    ctx.resetTransform();
+                }
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.restore();
+                setCanvasSize();
+            }
+
+            setCanvasSize();
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', endDraw);
+            canvas.addEventListener('mouseleave', endDraw);
+
+            canvas.addEventListener('touchstart', (event) => {
+                event.preventDefault();
+                startDraw(event);
+            }, { passive: false });
+
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', endDraw);
+            canvas.addEventListener('touchcancel', endDraw);
+
+            window.addEventListener('resize', setCanvasSize);
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearCanvas);
+            }
+        }
+
+        // Initialize
+        initIdeaCanvas();
+        initIdeaNotes();
+        initLearningNotes();
+        initCodePad();
+        initResourceAnalytics();
+        loadData();
+    </script>
+</body>
+</html>

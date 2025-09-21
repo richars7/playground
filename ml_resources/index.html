@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Playbooks & System Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fb;
+            margin: 0;
+            padding: 40px 20px;
+            color: #1f2933;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+        }
+
+        .intro {
+            font-size: 1rem;
+            margin-bottom: 32px;
+            color: #52606d;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.15);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin: 0 0 12px 0;
+            color: #324052;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #4f46e5;
+            background: rgba(79, 70, 229, 0.1);
+            margin-bottom: 12px;
+        }
+
+        .practice-section {
+            margin-top: 56px;
+        }
+
+        .practice-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: #1f2933;
+        }
+
+        .practice-intro {
+            color: #52606d;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .practice-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.07);
+            border: 1px solid rgba(120, 113, 198, 0.18);
+        }
+
+        .practice-card h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #2f3b4c;
+        }
+
+        .tip-blurb {
+            margin: 12px 0 18px;
+            color: #556070;
+            line-height: 1.6;
+        }
+
+        details {
+            background: #f8f9ff;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.18);
+            padding: 14px 18px;
+        }
+
+        details + details {
+            margin-top: 12px;
+        }
+
+        summary {
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            list-style: none;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '\25BE';
+            float: right;
+            color: #6366f1;
+            transition: transform 0.2s ease;
+        }
+
+        details[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        .problem-list {
+            margin: 14px 0 0 0;
+            padding-left: 0;
+        }
+
+        .problem-list li {
+            list-style: none;
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .problem-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .problem-list code {
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            background: rgba(99, 102, 241, 0.12);
+            padding: 2px 6px;
+            border-radius: 6px;
+            color: #4338ca;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        strong {
+            color: #334155;
+        }
+
+        a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 48px;
+            font-size: 0.85rem;
+            color: #8292a6;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ML Playbooks & System Design</h1>
+        <p class="intro">One-stop cheat sheet covering go-to algorithms, evaluation flows, and high-level architecture moves for both classic ML and modern LLM stacks.</p>
+
+        <div class="grid">
+            <section class="card">
+                <span class="badge">Conventional ML</span>
+                <h2>Algorithm Cheat Codes</h2>
+                <ul>
+                    <li><strong>Linear Models:</strong> Logistic/Linear regression, regularization playbook, decision boundary intuition.</li>
+                    <li><strong>Tree Ensemble:</strong> Random Forest vs. Gradient Boosting, hyperparameter knobs, SHAP-based inspection.</li>
+                    <li><strong>Support Vector Machines:</strong> Kernel tricks, margin maximization, scaling scenarios.</li>
+                    <li><strong>Clustering:</strong> K-Means vs. DBSCAN, choosing K, silhouette checks, anomaly hunts.</li>
+                    <li><strong>Time Series:</strong> ARIMA vs. Prophet quick-start, seasonality detection, rolling validation.</li>
+                </ul>
+            </section>
+
+            <section class="card">
+                <span class="badge">LLM Ops</span>
+                <h2>LLM System Design</h2>
+                <ul>
+                    <li><strong>Retrieval-Augmented Generation:</strong> Chunking heuristics, vector store topology, hybrid search mixes.</li>
+                    <li><strong>Prompt Orchestration:</strong> Template contracts, guardrail layers, evaluation harnesses.</li>
+                    <li><strong>Serving Architecture:</strong> Gateway pattern, caching policy, streaming responses.</li>
+                    <li><strong>Observability:</strong> Latency/error dashboards, drift detectors, human feedback flywheels.</li>
+                    <li><strong>Cost Control:</strong> Token budgeting, model routing, batch inferencing trade-offs.</li>
+                </ul>
+            </section>
+
+            <section class="card">
+                <span class="badge">System Thinking</span>
+                <h2>ML Platform Patterns</h2>
+                <ul>
+                    <li><strong>Data Lifecycle:</strong> Feature stores, data contracts, lineage tracking.</li>
+                    <li><strong>Experimentation:</strong> A/B harness, canary rollouts, automated rollback gates.</li>
+                    <li><strong>Model Deployment:</strong> Blue/green vs. shadow modes, CI/CD for models, governance touchpoints.</li>
+                    <li><strong>Evaluation Matrix:</strong> Offline metrics, online guardrails, counterfactual testing.</li>
+                    <li><strong>MLOps Automation:</strong> Pipelines, model registry, retraining triggers.</li>
+                </ul>
+            </section>
+        </div>
+
+        <section class="practice-section" id="deep-dives">
+            <h2>Deep Dive Guides</h2>
+            <p class="practice-intro">Need system-design level answers? Jump into detailed breakdowns for conventional ML pipelines and production-grade LLM stacks.</p>
+
+            <div class="practice-grid">
+                <article class="practice-card">
+                    <h3>Conventional ML Architecture</h3>
+                    <p class="tip-blurb">Walk through data audits, model trade-offs, tuning strategies, deployment patterns, and interview-ready narratives.</p>
+                    <details open>
+                        <summary>What’s Inside</summary>
+                        <ul class="problem-list">
+                            <li>Problem framing templates & KPI alignment</li>
+                            <li>Model family comparisons (linear, tree ensembles, SVM, clustering)</li>
+                            <li>Pipeline architecture diagrams, feature store rationale</li>
+                            <li>Deployment strategies and compliance safeguards</li>
+                        </ul>
+                    </details>
+                    <p class="tip-blurb" style="margin-top:18px;">
+                        <a href="conventional_ml/index.html" style="color:#4338ca;font-weight:600;text-decoration:none;">Launch the Conventional ML Deep Dive →</a>
+                    </p>
+                </article>
+
+                <article class="practice-card">
+                    <h3>LLM System Design Blueprint</h3>
+                    <p class="tip-blurb">Answer RAG, safety, and scaling interviews with a cohesive architecture: retrieval, prompts, routing, monitoring, governance.</p>
+                    <details open>
+                        <summary>What’s Inside</summary>
+                        <ul class="problem-list">
+                            <li>End-to-end RAG architecture and hybrid retrieval tactics</li>
+                            <li>Prompt orchestration, guardrails, and model routing logic</li>
+                            <li>Latency/cost management, evaluation harnesses, reliability</li>
+                            <li>Compliance, incident response, and team operating model</li>
+                        </ul>
+                    </details>
+                    <p class="tip-blurb" style="margin-top:18px;">
+                        <a href="llm_system_design/index.html" style="color:#4338ca;font-weight:600;text-decoration:none;">Open the LLM System Design Vault →</a>
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section class="practice-section" id="practice">
+            <h2>Prep Practice Vault</h2>
+            <p class="practice-intro">Combine the streak tips with targeted problem sets without hopping back to the main dashboard. Crack open a technique to skim the reminder and jump straight into the matching LeetCode reps.</p>
+
+            <div class="practice-grid">
+                <article class="practice-card">
+                    <h3>Arrays &amp; Strings</h3>
+                    <p class="tip-blurb">Two markers sprint inwards until they meet—perfect for sorted arrays, range finds, and max-area plays.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_two_sum.py</code> — LeetCode #1 • Hash Map • Most frequently asked</li>
+                            <li><code>002_valid_anagram.py</code> — LeetCode #242 • Character Frequency Counting</li>
+                            <li><code>003_contains_duplicate.py</code> — LeetCode #217 • Hash Set</li>
+                            <li><code>004_valid_parentheses.py</code> — LeetCode #20 • Stack for Matching</li>
+                            <li><code>005_maximum_subarray.py</code> — LeetCode #53 • Kadane's Algorithm</li>
+                            <li><code>006_longest_substring_without_repeating.py</code> — LeetCode #3 • Sliding Window + Hash Set</li>
+                            <li><code>007_container_with_most_water.py</code> — LeetCode #11 • Two Pointers</li>
+                            <li><code>008_3sum.py</code> — LeetCode #15 • Two Pointers + Sorting</li>
+                            <li><code>009_product_of_array_except_self.py</code> — LeetCode #238 • Prefix/Suffix Arrays</li>
+                            <li><code>010_group_anagrams.py</code> — LeetCode #49 • Hash Map + Sorting</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Linked Lists</h3>
+                    <p class="tip-blurb">Flip pointers as you stride forward; unleash fast-vs-slow races to sniff out cycles.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_reverse_linked_list.py</code> — LeetCode #206 • Three Pointers (prev, curr, next)</li>
+                            <li><code>002_linked_list_cycle.py</code> — LeetCode #141 • Floyd's Cycle Detection</li>
+                            <li><code>003_merge_two_sorted_lists.py</code> — LeetCode #21 • Two Pointers + Dummy Node</li>
+                            <li><code>004_palindrome_linked_list.py</code> — LeetCode #234 • Reverse Half + Two Pointers</li>
+                            <li><code>005_remove_duplicates_from_sorted_list.py</code> — LeetCode #83 • Single Pointer Traversal</li>
+                            <li><code>006_add_two_numbers.py</code> — LeetCode #2 • Digit-by-Digit Addition + Carry</li>
+                            <li><code>007_remove_nth_node_from_end.py</code> — LeetCode #19 • Two Pointers with Gap</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Stacks &amp; Queues</h3>
+                    <p class="tip-blurb">Stack: last-in, first-out for nested logic and undo chains. Queue: first-in, first-out for BFS beats.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_valid_parentheses.py</code> — LeetCode #20 • Stack for Matching</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Trees &amp; Binary Search</h3>
+                    <p class="tip-blurb">Slice the search space in half each move; tour trees pre/in/post order to shape the story you need.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_maximum_depth_of_binary_tree.py</code> — LeetCode #104 • Recursive DFS</li>
+                            <li><code>002_binary_tree_level_order_traversal.py</code> — LeetCode #102 • BFS with Queue</li>
+                            <li><code>003_search_in_rotated_sorted_array.py</code> — LeetCode #33 • Modified Binary Search</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Dynamic Programming</h3>
+                    <p class="tip-blurb">Cache small wins and climb upward—turn brute-force chaos into memoized momentum.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_climbing_stairs.py</code> — LeetCode #70 • Fibonacci Sequence</li>
+                            <li><code>002_coin_change.py</code> — LeetCode #322 • Unbounded Knapsack</li>
+                            <li><code>003_longest_increasing_subsequence.py</code> — LeetCode #300 • DP with Binary Search</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Backtracking</h3>
+                    <p class="tip-blurb">Pick, mark, recurse, undo—systematically sweep every path for combos, subsets, and permutations.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_subsets.py</code> — LeetCode #78 • Decision Tree (Include/Exclude)</li>
+                            <li><code>002_permutations.py</code> — LeetCode #46 • Backtracking with Visited Array</li>
+                            <li><code>003_combination_sum.py</code> — LeetCode #39 • Backtracking with Repetition</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Graphs</h3>
+                    <p class="tip-blurb">BFS ripples layer by layer while DFS dives deep then rewinds—map networks, sniff cycles, trace routes.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_number_of_islands.py</code> — LeetCode #200 • DFS/BFS on Grid</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Greedy</h3>
+                    <p class="tip-blurb">Lock in the best local move when proofs say it wins globally—interval picks, coin change, Huffman trees.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_gas_station.py</code> — LeetCode #134 • Greedy Algorithm</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Bit Manipulation</h3>
+                    <p class="tip-blurb">Flip binary switches: XOR cancels pairs, masks isolate states, shifts turbocharge math in O(1).</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_single_number.py</code> — LeetCode #136 • XOR Operation</li>
+                            <li><code>002_number_of_1_bits.py</code> — LeetCode #191 • Bit Counting</li>
+                        </ul>
+                    </details>
+                </article>
+
+                <article class="practice-card">
+                    <h3>Math</h3>
+                    <p class="tip-blurb">Spot number patterns, compress repeated work, and wield math identities to vaporize loops.</p>
+                    <details open>
+                        <summary>Problem Set</summary>
+                        <ul class="problem-list">
+                            <li><code>001_pow_x_n.py</code> — LeetCode #50 • Fast Exponentiation</li>
+                            <li><code>002_sqrt_x.py</code> — LeetCode #69 • Binary Search</li>
+                        </ul>
+                    </details>
+                </article>
+            </div>
+        </section>
+
+        <section class="footer">
+            Inspired by daily problem solving? Loop these frameworks into your streak to balance algorithms with architecture thinking.
+        </section>
+    </div>
+</body>
+</html>

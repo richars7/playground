@@ -1,0 +1,51 @@
+# LeetCode Streak Tracker Requirements
+# Core Python packages for the streak tracking system
+
+# No external dependencies required for basic functionality!
+# The streak tracker uses only Python standard library modules:
+# - json (for data storage)
+# - os (for file operations)
+# - datetime (for date/time handling)
+# - random (for motivational messages)
+# - webbrowser (for launching the UI)
+
+# Optional packages for enhanced functionality:
+# (uncomment if you want to add these features)
+
+# For better date/time handling (optional)
+# python-dateutil>=2.8.2
+
+# For enhanced JSON handling (optional)
+# ujson>=5.1.0
+
+# For better terminal colors (optional)
+# colorama>=0.4.4
+
+# For progress bars in terminal (optional)
+# tqdm>=4.64.0
+
+# For web server functionality (if you want to serve the UI)
+# flask>=2.2.0
+# flask-cors>=3.0.10
+
+# For data visualization (optional)
+# matplotlib>=3.6.0
+# plotly>=5.11.0
+
+# For database storage (optional)
+# sqlite3 (built into Python)
+# sqlalchemy>=1.4.0
+
+# For configuration management (optional)
+# pyyaml>=6.0
+# configparser (built into Python)
+
+# For logging (optional)
+# loguru>=0.6.0
+
+# For testing (optional)
+# pytest>=7.2.0
+# pytest-cov>=4.0.0
+
+# For daily notifications (recommended)
+schedule>=1.2.0
