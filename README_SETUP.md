@@ -179,7 +179,7 @@ test/
 ├── quick_solve.py            # Quick solver
 ├── daily_reminder.py         # Daily check-in
 ├── launch_ui.py              # UI launcher
-├── streak_ui.html            # Web UI
+├── index.html                # Web UI
 ├── requirements.txt          # Dependencies
 ├── setup_environment.sh      # Setup script (Mac/Linux)
 ├── setup_environment.bat     # Setup script (Windows)

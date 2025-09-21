@@ -11,11 +11,11 @@ def launch_ui():
     """Launch the streak tracker UI in the default browser"""
     # Get the current directory
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    ui_file = os.path.join(current_dir, "streak_ui.html")
+    ui_file = os.path.join(current_dir, "index.html")
     
     # Check if the UI file exists
     if not os.path.exists(ui_file):
-        print("❌ Error: streak_ui.html not found!")
+        print("❌ Error: index.html not found!")
         print("Make sure you're running this from the correct directory.")
         return
     

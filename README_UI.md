@@ -11,8 +11,8 @@ python launch_ui.py
 
 ### Option 2: Direct Browser Access
 1. Open your web browser
-2. Navigate to: `file:///path/to/your/test/streak_ui.html`
-3. Or simply double-click the `streak_ui.html` file
+2. Navigate to: `file:///path/to/your/test/index.html`
+3. Or simply double-click the `index.html` file
 
 ### Option 3: Batch/Shell Scripts
 - **Windows**: Double-click `launch_ui.bat`
@@ -101,7 +101,7 @@ Your progress is automatically saved in your browser's localStorage, so:
 
 ### File Structure
 ```
-streak_ui.html          # Main UI file
+index.html              # Main UI file
 launch_ui.py           # Python launcher
 launch_ui.bat          # Windows batch file
 launch_ui.sh           # Mac/Linux shell script
@@ -140,7 +140,7 @@ README_UI.md           # This documentation
 ## 🚨 Troubleshooting
 
 ### UI Won't Open
-- Make sure `streak_ui.html` exists in the same directory
+- Make sure `index.html` exists in the same directory
 - Try opening the HTML file directly in your browser
 - Check that your browser supports modern JavaScript
 
